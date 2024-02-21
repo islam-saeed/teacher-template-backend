@@ -25,6 +25,11 @@ class Admin extends Authenticatable implements JWTSubject
         return $this->hasMany(Course::class);
     }
 
+    public function sections()
+    {
+        return $this->hasMany(Section::class);
+    }
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *

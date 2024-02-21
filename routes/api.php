@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\CourseController;
+use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\StudentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,12 +29,22 @@ Route::group([
 ], function () {
 
     Route::get('/index',[AdminController::class,'index']);
-
     Route::post('/login', [AdminController::class, 'login']);
     Route::post('/register', [AdminController::class, 'register']);
     Route::post('/logout', [AdminController::class, 'logout']);
     Route::post('/refresh', [AdminController::class, 'refresh']);
     Route::get('/admin-profile', [AdminController::class, 'adminProfile']);    
+});
+Route::group([
+    'middleware' => ['assign.guard:admin'],
+    'prefix' => 'section'
+], function () {
+
+    Route::get('/index',[SectionController::class,'index']);
+    Route::post('/create', [SectionController::class, 'create']);
+    Route::get('/all_section',[SectionController::class,'all_section']);
+    Route::delete('/delete_section/{id}', [SectionController::class, 'delete_section']);
+    Route::patch('/update_section/{id}', [SectionController::class, 'update_section']);
 });
 
 Route::group([

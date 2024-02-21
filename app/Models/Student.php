@@ -22,6 +22,10 @@ class Student extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany(Course::class);
     }
+    public function section()
+    {
+        return $this->belongsTo(Section::class);
+    }
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
