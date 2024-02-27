@@ -35,6 +35,7 @@ Route::group([
     Route::post('/refresh', [AdminController::class, 'refresh']);
     Route::get('/admin-profile', [AdminController::class, 'adminProfile']);    
 });
+
 Route::group([
     'middleware' => ['assign.guard:admin'],
     'prefix' => 'section'
@@ -48,16 +49,14 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => ['assign.guard:student'],
+    'middleware' => ['assign.guard:admin'],
     'prefix' => 'student'
 ], function () {
 
     Route::get('/index',[StudentController::class,'index']);
+    Route::post('/create', [StudentController::class, 'create']);
+    Route::get('/all_students',[StudentController::class,'all_students']);
 
-    Route::post('/login', [StudentController::class, 'login']);
-    Route::post('/register', [StudentController::class, 'register']);
-    Route::post('/logout', [StudentController::class, 'logout']);
-    Route::post('/refresh', [StudentController::class, 'refresh']);
     Route::get('/student-profile', [StudentController::class, 'studentProfile']);    
 });
 
