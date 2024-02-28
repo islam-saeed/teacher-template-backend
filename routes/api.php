@@ -56,6 +56,9 @@ Route::group([
     Route::get('/index',[StudentController::class,'index']);
     Route::post('/create', [StudentController::class, 'create']);
     Route::get('/all_students',[StudentController::class,'all_students']);
+    Route::delete('/delete_student/{id}', [StudentController::class, 'delete_student']);
+    Route::patch('/update_student/{id}', [StudentController::class, 'update_student']);
+
 
     Route::get('/student-profile', [StudentController::class, 'studentProfile']);    
 });
