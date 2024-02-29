@@ -135,5 +135,17 @@ class SectionController extends Controller
             'section' => $section
         ]);
     }
+    public function groups(){
+        // Get the current admin ID
+        $adminId = Auth::id();
+
+        $admin = Admin::find($adminId);
+        
+        $uniqueGroups = $admin->sections()->distinct()->pluck('group');
+
+        return response()->json($uniqueGroups);
+    }
+
+
     
 }

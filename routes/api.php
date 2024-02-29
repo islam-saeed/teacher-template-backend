@@ -33,7 +33,9 @@ Route::group([
     Route::post('/register', [AdminController::class, 'register']);
     Route::post('/logout', [AdminController::class, 'logout']);
     Route::post('/refresh', [AdminController::class, 'refresh']);
-    Route::get('/admin-profile', [AdminController::class, 'adminProfile']);    
+    Route::get('/admin-profile', [AdminController::class, 'adminProfile']); 
+   
+    
 });
 
 Route::group([
@@ -46,6 +48,8 @@ Route::group([
     Route::get('/all_section',[SectionController::class,'all_section']);
     Route::delete('/delete_section/{id}', [SectionController::class, 'delete_section']);
     Route::patch('/update_section/{id}', [SectionController::class, 'update_section']);
+    Route::get('/groups',[SectionController::class,'groups']);
+
 });
 
 Route::group([
