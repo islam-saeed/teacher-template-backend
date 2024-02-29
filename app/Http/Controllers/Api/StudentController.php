@@ -12,32 +12,26 @@ use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
-    //
-    //
     /**
      * Create a new AuthController instance.
      *
      * @return void
      */
     public function __construct() {
-        $this->middleware('jwt.verify', ['except' => [ 'index']]);
+        $this->middleware('jwt.verify', ['except' => ['index']]);
     }
-
 
     public function index(){
-        $student=Student::Get();
+        $student = Student::get();
         return response()->json($student);
-
     }
-   
-    public function create(Request $request) {
 
-        // الحصول على ID الadmin الحالي
+    public function create(Request $request) {
+        // Get the current admin ID
         $adminId = Auth::id();
 
-        // إضافة 'admin_id' وتعيينها إلى ID الadmin الحالي
+        // Add 'admin_id' and set it to the current admin ID
         $request->merge(['admin_id' => $adminId]);
-
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
@@ -48,7 +42,7 @@ class StudentController extends Controller
             'parent_phone_number' => 'string',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
 
@@ -58,11 +52,10 @@ class StudentController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-
         $student = Student::create(array_merge(
-                    $validator->validated(),
-                ));
-        
+            $validator->validated(),
+        ));
+
         return response()->json([
             'message' => 'Student added successfully.',
             'student' => $student
@@ -70,7 +63,7 @@ class StudentController extends Controller
     }
 
     public function all_students(){
-        // الحصول على ID الadmin الحالي
+        // Get the current admin ID
         $adminId = Auth::id();
 
         $admin = Admin::find($adminId);
@@ -81,58 +74,57 @@ class StudentController extends Controller
 
     public function delete_student($id){
         $studentId = $id;
-        // الحصول على ID الadmin الحالي
+        // Get the current admin ID
         $adminId = Auth::id();
 
-        // الحصول على موديل المدير
+        // Get the admin model
         $admin = Admin::find($adminId);
 
-        // الحصول على موديل الطالب المعين
+        // Get the model of the specified student
         $student = Student::find($studentId);
 
-        // التحقق من وجود الطالب
+        // Check the existence of the student
         if (!$student) {
             return response()->json([
-                'error' => 'student not found'
+                'error' => 'Student not found'
             ], 404);
         }
 
-        // التحقق مما إذا كان الطالب ينتمي إلى المدير
+        // Check if the student belongs to the admin
         if ($student->admin_id != $admin->id) {
             return response()->json([
                 'message' => 'Unauthorized action'
             ], 403);
         }
 
-        // حذف student
+        // Delete student
         $student->delete();
 
         return response()->json([
-            'message' => 'student deleted successfully'
+            'message' => 'Student deleted successfully'
         ], 201);
     }
 
-    public function update_student($id , Request $request){
+    public function update_student($id, Request $request){
         $studentId = $id;
-        // الحصول على ID الadmin الحالي
+        // Get the current admin ID
         $adminId = Auth::id();
 
-        // البحث عن المدير
+        // Find the admin
         $admin = Admin::find($adminId);
 
-        // البحث عن الطالب
-        $student = student::find($studentId);
+        // Find the student
+        $student = Student::find($studentId);
 
-        // التحقق من وجود الطالب
+        // Check the existence of the student
         if (!$student) {
-            return response()->json(['error' => 'student not found']);
+            return response()->json(['error' => 'Student not found']);
         }
 
-        // التحقق مما إذا كان الطالب ينتمي إلى المدير
+        // Check if the student belongs to the admin
         if ($student->admin_id != $admin->id) {
             return response()->json(['message' => 'Unauthorized action']);
         }
-
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
@@ -141,26 +133,86 @@ class StudentController extends Controller
             'parent_name' => 'string',
             'parent_phone_number' => 'string',
         ]);
-        if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
-        }    
 
-        // تحديث الطالب باستخدام البيانات الجديدة
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        // Update the student with the new data
         $student->update($validator->validated());
 
         return response()->json([
-            'message' => 'student updated successfully',
+            'message' => 'Student updated successfully',
             'student' => $student
         ]);
     }
 
+    public function attendance($id,Request $request){
+        $sectionId = $id;
+        // Get the current admin ID
+        $adminId = Auth::id();
     
-   
+        // Find the admin
+        $admin = Admin::find($adminId);
+    
+        // Find the section
+        $section = Section::find($sectionId);
+    
+        // Check the existence of the section
+        if (!$section) {
+            return response()->json(['error' => 'Section not found']);
+        }
+    
+        // Check if the section belongs to the admin
+        if ($section->admin_id != $admin->id) {
+            return response()->json(['message' => 'Unauthorized action']);
+        }
 
-   
-    
+        $validator = Validator::make($request->all(), [
+            'date' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $students = Student::all();
+        $students = $section->students;
+        $newValue = "0";
+        foreach ($students as $student) {
+            $oldValue = $student->attendance;
+            list($beforeMark, $afterMark) = explode('/', $oldValue);
+
+            if (in_array($student->id , $request->arr)) {
+
+                $newValue = ($beforeMark) . '/' . ($afterMark+1);
+
+                if ($student->date_of_absence == null) {
+                    $date_of_absence = $request->date;
+                }
+                else {
+                    $date_of_absence = $student->date_of_absence ." - ". $request->date;
+                }
+
+            } else {
+                $newValue = ($beforeMark + 1) . '/' . ($afterMark+1);
+                $date_of_absence = $student->date_of_absence;
+            }
+            
+            
+            $student->update([
+                'attendance' => $newValue,
+                'date_of_absence' => $date_of_absence
+            ]);
+        }
+
+        return response()->json(['message' => 'successfully']);
+
+
+    }
+
+
     public function studentProfile() {
         return response()->json(auth()->user());
     }
-    
 }

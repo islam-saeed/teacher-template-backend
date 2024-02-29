@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->string('parent_name')->nullable();
             $table->string('parent_phone_number')->nullable();
+            // $table->string('attendance')->default("0/0");
+            // $table->string('date_of_absence')->nullable();
+            
 
             $table->timestamps();
         });

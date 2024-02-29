@@ -23,10 +23,10 @@ class SectionController extends Controller
 
     public function create(Request $request) {
 
-        // الحصول على ID الadmin الحالي
+        // Get the current admin ID
         $adminId = Auth::id();
 
-        // إضافة 'admin_id' وتعيينها إلى ID الadmin الحالي
+        // Add 'admin_id' and set it to the current admin ID
         $request->merge(['admin_id' => $adminId]);
 
         $validator = Validator::make($request->all(), [
@@ -51,7 +51,7 @@ class SectionController extends Controller
     }
 
     public function all_section(){
-        // الحصول على ID الadmin الحالي
+        // Get the current admin ID
         $adminId = Auth::id();
 
         $admin = Admin::find($adminId);
@@ -62,59 +62,59 @@ class SectionController extends Controller
 
     public function delete_section($id){
         $sectionId = $id;
-        // الحصول على ID الadmin الحالي
+        // Get the current admin ID
         $adminId = Auth::id();
-
-        // الحصول على موديل المدير
+    
+        // Get the admin model
         $admin = Admin::find($adminId);
-
-        // الحصول على موديل القسم المعين
+    
+        // Get the model of the specified department
         $section = Section::find($sectionId);
-
-        // التحقق من وجود القسم
+    
+        // Check the existence of the department
         if (!$section) {
             return response()->json([
                 'error' => 'Section not found'
             ], 404);
         }
-
-        // التحقق مما إذا كان القسم ينتمي إلى المدير
+    
+        // Check if the section belongs to the admin
         if ($section->admin_id != $admin->id) {
             return response()->json([
                 'message' => 'Unauthorized action'
             ], 403);
         }
-
-        // حذف section
+    
+        // Delete section
         $section->delete();
-
+    
         return response()->json([
             'message' => 'Section deleted successfully'
         ], 201);
     }
+    
 
-    public function update_section($id , Request $request){
+    public function update_section($id, Request $request){
         $sectionId = $id;
-        // الحصول على ID الadmin الحالي
+        // Get the current admin ID
         $adminId = Auth::id();
-
-        // البحث عن المدير
+    
+        // Find the admin
         $admin = Admin::find($adminId);
-
-        // البحث عن القسم
+    
+        // Find the section
         $section = Section::find($sectionId);
-
-        // التحقق من وجود القسم
+    
+        // Check the existence of the section
         if (!$section) {
             return response()->json(['error' => 'Section not found']);
         }
-
-        // التحقق مما إذا كان القسم ينتمي إلى المدير
+    
+        // Check if the section belongs to the admin
         if ($section->admin_id != $admin->id) {
             return response()->json(['message' => 'Unauthorized action']);
         }
-
-
+    
         $validator = Validator::make($request->all(), [
             'days' => 'required|string',
             'time_period' => 'required|string',
@@ -122,16 +122,18 @@ class SectionController extends Controller
             'notes' => 'required|string',
             'group' => 'required|string',
         ]);
+    
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }    
-
-        // تحديث القسم باستخدام البيانات الجديدة
+    
+        // Update the section with the new data
         $section->update($validator->validated());
-
+    
         return response()->json([
             'message' => 'Section updated successfully',
             'section' => $section
         ]);
     }
+    
 }

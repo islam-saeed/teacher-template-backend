@@ -58,7 +58,9 @@ Route::group([
     Route::get('/all_students',[StudentController::class,'all_students']);
     Route::delete('/delete_student/{id}', [StudentController::class, 'delete_student']);
     Route::patch('/update_student/{id}', [StudentController::class, 'update_student']);
+    Route::patch('/attendance/{id}', [StudentController::class, 'attendance']);
 
+    
 
     Route::get('/student-profile', [StudentController::class, 'studentProfile']);    
 });

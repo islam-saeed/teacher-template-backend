@@ -19,6 +19,8 @@ class Student extends Model
         'phone_number',
         'parent_name',
         'parent_phone_number',
+        'attendance',
+        'date_of_absence',
     ];
 
     public function courses()
