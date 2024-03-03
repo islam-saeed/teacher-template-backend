@@ -48,7 +48,10 @@ Route::group([
     Route::get('/all_section',[SectionController::class,'all_section']);
     Route::delete('/delete_section/{id}', [SectionController::class, 'delete_section']);
     Route::patch('/update_section/{id}', [SectionController::class, 'update_section']);
-    Route::get('/groups',[SectionController::class,'groups']);
+    Route::get('/groups',[SectionController::class,'groups_of_admin']);
+    Route::post('/fees/{id}', [SectionController::class, 'fees']);
+
+    
 
 });
 

@@ -22,7 +22,6 @@ class SectionController extends Controller
     }
 
     public function create(Request $request) {
-
         // Get the current admin ID
         $adminId = Auth::id();
 
@@ -135,7 +134,8 @@ class SectionController extends Controller
             'section' => $section
         ]);
     }
-    public function groups(){
+    
+    public function groups_of_admin(){
         // Get the current admin ID
         $adminId = Auth::id();
 
@@ -145,6 +145,104 @@ class SectionController extends Controller
 
         return response()->json($uniqueGroups);
     }
+
+    public function fees($id, Request $request){
+
+        // $jsonString1 = '{"2": {"100": ["3", "4"]}}';
+        // $jsonString2 = '{"2": {"100": ["5", "6"]}}';
+
+        // // تحويل JSON إلى مصفوفات PHP
+        // $array1 = json_decode($jsonString1, true);
+        // $array2 = json_decode($jsonString2, true);
+
+        // // foreach ($array2 as $key => &$value) {
+        // //     // return $value;
+        // //     $array1[$key] = $value;
+        // // }
+        // // return $array1;
+
+        // // دمج المصفوفات بشكل متكامل
+        // $mergedArray = array_merge_recursive_distinct($array1, $array2);
+
+        // // تحويل المصفوفة المدمجة إلى JSON
+        // $mergedJsonString = json_encode($mergedArray);
+
+        // return compact('array1', 'array2','mergedArray');
+
+
+        // return $mergedArray;
+
+
+
+
+
+
+
+
+        //////////////////////////////////////////////////////
+        $sectionId = $id;
+        // Get the current admin ID
+        $adminId = Auth::id();
+    
+        // Find the admin
+        $admin = Admin::find($adminId);
+    
+        // Find the section
+        $section = Section::find($sectionId);
+    
+        // Check the existence of the section
+        if (!$section) {
+            return response()->json(['error' => 'Section not found']);
+        }
+    
+        // Check if the section belongs to the admin
+        if ($section->admin_id != $admin->id) {
+            return response()->json(['message' => 'Unauthorized action']);
+        }
+
+        $array1 = json_decode($section->fees, true);
+        $array2 = $request->fees;
+
+
+        $validator = Validator::make($request->all(), [
+            'fees' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        if ($array1==null) {
+            $array1=$array2;
+        }
+        else {
+            foreach ($array2 as $key => $values) {
+                if (array_key_exists($key, $array1)) {    
+                    foreach ($values as $subKey => $subValues) {
+                        if (array_key_exists($subKey, $array1[$key])) {
+                            $array1[$key][$subKey] = array_merge($array1[$key][$subKey], $subValues);
+                        } else {
+                            $array1[$key][$subKey] = $subValues;
+                        }
+                    }
+                } else {
+                    $array1[$key] = $values;    
+                }
+            }
+        }
+        $section->fees = $array1;
+        
+
+        $section->save();    
+        return response()->json([
+            'message' => ' successfully ',
+            'fees' => $section->fees
+        ]);
+
+
+
+    }
+    
 
 
     

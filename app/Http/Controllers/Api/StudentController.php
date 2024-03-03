@@ -27,6 +27,7 @@ class StudentController extends Controller
     }
 
     public function create(Request $request) {
+
         // Get the current admin ID
         $adminId = Auth::id();
 
@@ -47,7 +48,11 @@ class StudentController extends Controller
         }
 
         $section = Section::find($request->section_id);
-
+        // Check the existence of the section
+        if (!$section) {
+            return response()->json(['error' => 'Section not found']);
+        }
+        
         if ($adminId != $section->admin_id ) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }

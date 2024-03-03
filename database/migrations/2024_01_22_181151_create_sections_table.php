@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -18,6 +19,7 @@ return new class extends Migration
             $table->string('color');
             $table->string('notes')->nullable();
             $table->string('group');
+            $table->json('fees')->nullable();
             $table->foreignId('admin_id')->constrained('admins');
             $table->timestamps();
         });

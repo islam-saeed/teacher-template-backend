@@ -16,6 +16,7 @@ class Section extends Model
         'notes',
         'group',
         'admin_id',
+        'fees',
     ];
 
     public function admin()
