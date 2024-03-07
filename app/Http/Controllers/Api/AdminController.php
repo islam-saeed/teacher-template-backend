@@ -88,8 +88,7 @@ class AdminController extends Controller
         return response()->json([
             'user' => auth()->user()->name,
             'token' => $token,
-            // 'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60 *24,
+            'expires_in' => auth()->factory()->getTTL() * 60 ,
             
         ]);
     }

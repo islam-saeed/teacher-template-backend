@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\CourseController;
+use App\Http\Controllers\Api\HistoryController;
 use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\StudentController;
 use Illuminate\Http\Request;
@@ -73,17 +74,11 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => 'assign.guard:admin',
-    'prefix' => 'course'
+    'middleware' => ['assign.guard:admin'],
+    'prefix' => 'history'
 ], function () {
 
-    Route::get('/index',[CourseController::class,'index']);
-    Route::get('/course_list{id}',[CourseController::class,'course_list']);
+    Route::get('/showHistory',[HistoryController::class,'showHistory']);
+    
 
-
-    // Route::post('/login', [StudentController::class, 'login']);
-    // Route::post('/register', [StudentController::class, 'register']);
-    // Route::post('/logout', [StudentController::class, 'logout']);
-    // Route::post('/refresh', [StudentController::class, 'refresh']);
-    // Route::get('/student-profile', [StudentController::class, 'studentProfile']);    
 });
