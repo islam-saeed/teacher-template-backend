@@ -16,9 +16,9 @@ return new class extends Migration
             $table->unsignedBigInteger('model_id');
             $table->string('action');
             $table->json('data');
+            $table->foreignId('admin_id')->constrained('admins');
             $table->timestamps();
 
-            // $table->foreign('model_id')->references('id')->on('section')->onDelete('cascade');
             
         });
     }

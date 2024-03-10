@@ -16,15 +16,15 @@ class AdminController extends Controller
      * @return void
      */
     public function __construct() {
-        $this->middleware('jwt.verify', ['except' => ['login', 'register','index']]);
+        $this->middleware('jwt.verify', ['except' => ['login', 'register']]);
     }
 
 
-    public function index(){
-        $admin=Admin::Get();
-        return response()->json($admin);
+    // public function index(){
+    //     $admin=Admin::Get();
+    //     return response()->json($admin);
 
-    }
+    // }
 
 
    

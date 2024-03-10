@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Section extends Model
 {
@@ -34,15 +35,15 @@ class Section extends Model
         parent::boot();
 
         static::created(function ($section) {
-            $section->createHistoryRecord('created');
+            $section->createHistoryRecord('create section');
         });
 
         static::updated(function ($section) {
-            $section->createHistoryRecord('updated');
+            $section->createHistoryRecord('update section');
         });
 
         static::deleted(function ($section) {
-            $section->createHistoryRecord('deleted');
+            $section->createHistoryRecord('delete section');
         });
     }
 
@@ -52,6 +53,7 @@ class Section extends Model
             'model_id' => $this->id,
             'action'   => $action,
             'data'     => $this->toJson(),
+            'admin_id' => Auth::id(),
         ]);
     }
 }

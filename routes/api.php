@@ -78,7 +78,7 @@ Route::group([
     'prefix' => 'history'
 ], function () {
 
-    Route::get('/showHistory',[HistoryController::class,'showHistory']);
+    Route::get('/show',[HistoryController::class,'show']);
     
 
 });

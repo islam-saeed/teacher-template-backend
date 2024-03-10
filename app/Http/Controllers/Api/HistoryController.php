@@ -3,19 +3,29 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\History;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HistoryController extends Controller
 {
     //
-    public function showHistory($sectiontId)
+    public function __construct() {
+        $this->middleware('jwt.verify');
+    }
+
+
+    public function show()
     {
-        $history = History::where('model_id', $sectiontId)->get();
+        // Get the current admin ID
+        $adminId = Auth::id();
 
+        $admin = Admin::find($adminId);
 
-        return response()->json([
-            'history' => $history
-        ]);
+        $history = $admin->history;
+        return response()->json($history);
+
+        
     }
 }

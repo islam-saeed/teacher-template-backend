@@ -4,8 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-
+use Illuminate\Support\Facades\Auth;
 
 class Student extends Model
 {
@@ -35,6 +34,34 @@ class Student extends Model
     {
         return $this->belongsTo(Admin::class);
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($student) {
+            $student->createHistoryRecord('create student');
+        });
+
+        static::updated(function ($student) {
+            $student->createHistoryRecord('update student');
+        });
+
+        static::deleted(function ($student) {
+            $student->createHistoryRecord('delete student');
+        });
+    }
+
+    public function createHistoryRecord($action)
+    {
+        History::create([
+            'model_id' => $this->id,
+            'action'   => $action,
+            'data'     => $this->toJson(),
+            'admin_id' => Auth::id(),
+        ]);
+    }
+
 
     
 }

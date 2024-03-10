@@ -9,6 +9,11 @@ class History extends Model
 {
     use HasFactory;
     
-    protected $fillable = ['model_id', 'action', 'data'];
+    protected $fillable = ['model_id', 'action', 'data','admin_id'];
+
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class);
+    }
 
 }
