@@ -8,6 +8,7 @@ use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class SectionController extends Controller
 {
@@ -33,7 +34,12 @@ class SectionController extends Controller
             'time_period' => 'required|string',
             'color' => 'required|string',
             'notes' => 'required|string',
-            'group' => 'required|string',
+            'group' => ['required','string',
+                Rule::unique(Section::class)->where(function ($query) use ($request) {
+                    return $query->where('days', $request->days)
+                                 ->where('time_period', $request->time_period);
+                }),
+            ],
             'admin_id' =>'required',
         ]);
         if($validator->fails()){

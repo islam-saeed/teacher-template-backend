@@ -79,6 +79,8 @@ Route::group([
 ], function () {
 
     Route::get('/show',[HistoryController::class,'show']);
+    Route::post('/delete/{id}', [HistoryController::class, 'delete']);
+
     
 
 });
