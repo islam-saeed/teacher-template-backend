@@ -84,3 +84,17 @@ Route::group([
     
 
 });
+
+Route::group([
+    'middleware' => ['assign.guard:admin'],
+    'prefix' => 'course'
+], function () {
+
+    Route::get('/index',[CourseController::class,'index']);
+    Route::post('/create', [CourseController::class, 'create']);
+    Route::get('/all_courses',[CourseController::class,'all_courses']);
+    Route::delete('/delete_course/{id}', [CourseController::class, 'delete_course']);
+    Route::patch('/update_course/{id}', [CourseController::class, 'update_course']);
+    
+
+});

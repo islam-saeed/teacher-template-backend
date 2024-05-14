@@ -9,6 +9,15 @@ class Course extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'price',
+        'admin_id',
+        'description',
+        'card_media',
+        
+    ];
+
     public function admin()
     {
         return $this->belongsTo(Admin::class);
