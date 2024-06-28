@@ -17,7 +17,8 @@ class CourseController extends Controller
     }
 
     public function index(){
-        $courses=Course::Get();
+        $courses = Course::with('media')->get();
+
         return $courses;
     }
 
@@ -39,8 +40,6 @@ class CourseController extends Controller
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
-
-        // return 'asas';
 
         $course = Course::create($validator->validated());
 

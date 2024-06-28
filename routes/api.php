@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\HistoryController;
+use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\StudentController;
 use Illuminate\Http\Request;
@@ -95,6 +96,21 @@ Route::group([
     Route::get('/all_courses',[CourseController::class,'all_courses']);
     Route::delete('/delete_course/{id}', [CourseController::class, 'delete_course']);
     Route::patch('/update_course/{id}', [CourseController::class, 'update_course']);
-    
+
+
+});
+
+Route::group([
+    'middleware' => ['assign.guard:admin'],
+    'prefix' => 'media'
+], function () {
+
+    Route::get('/index',[MediaController::class,'index']);
+    Route::post('/create/{id}', [MediaController::class, 'create']);
+    // Route::get('/all_courses',[CourseController::class,'all_courses']);
+    // Route::delete('/delete_course/{id}', [CourseController::class, 'delete_course']);
+    // Route::patch('/update_course/{id}', [CourseController::class, 'update_course']);
+    // Route::get('/all_courses',[CourseController::class,'all_courses']);
+
 
 });

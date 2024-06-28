@@ -65,6 +65,8 @@ class SectionController extends Controller
         return response()->json($sections);
     }
 
+    
+
     public function delete_section($id){
         $sectionId = $id;
         // Get the current admin ID
